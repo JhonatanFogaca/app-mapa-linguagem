@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { HeartHandshake, Stethoscope } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DecoracaoCeu } from "./decoracao-ceu"
@@ -44,6 +45,13 @@ export function TelaBoasVindas({ animarEntrada, onResponsavel, onFono }: Props) 
           Sou fonoaudióloga
         </Button>
       </div>
+
+      <Link
+        href="/sobre"
+        className="relative rounded-xl px-2 py-1 text-base font-semibold text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-4 focus-visible:ring-ring/40"
+      >
+        Saiba mais sobre o projeto
+      </Link>
     </section>
   )
 }
