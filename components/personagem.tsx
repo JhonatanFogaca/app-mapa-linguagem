@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { motion, useReducedMotion, type Variants } from "framer-motion"
+import { motion, type Variants } from "framer-motion"
 
 export type NomePersonagem = "sisi" | "tata" | "nana" | "belinha" | "mari"
 export type EstadoPersonagem = "parado" | "falando" | "comemorando" | "entrando"
@@ -50,7 +50,8 @@ type PersonagemProps = {
 }
 
 export function Personagem({ nome, estado = "parado", altura = 280 }: PersonagemProps) {
-  const reduzirMovimento = useReducedMotion()
+  /* As personagens são o centro da demonstração e o movimento delas é suave: não seguem "reduzir movimento" do sistema. */
+  const reduzirMovimento = false
   const largura = Math.round(altura * PROPORCAO)
 
   return (

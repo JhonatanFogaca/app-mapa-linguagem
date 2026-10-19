@@ -5,7 +5,7 @@
 // Arquivos esperados em /public/animados/{nome}/ e /public/animados/config.json (veja o pacote).
 
 import { useEffect, useRef, useState } from "react"
-import { motion, useReducedMotion, type Variants } from "framer-motion"
+import { motion, type Variants } from "framer-motion"
 import config from "@/public/animados/config.json"
 
 export type EstadoAnimado = "parado" | "falando" | "comemorando" | "entrando"
@@ -30,7 +30,8 @@ type ConfigPersonagem = { quadros: number; proporcao: number; camadas: Record<st
 
 export function PersonagemAnimado({ nome, estado = "parado", altura = 280 }: { nome: Nome; estado?: EstadoAnimado; altura?: number }) {
   const c = (config as unknown as Record<Nome, ConfigPersonagem>)[nome]
-  const reduzirMovimento = useReducedMotion()
+  /* As personagens são o centro da demonstração e o movimento delas é suave: não seguem "reduzir movimento" do sistema. */
+  const reduzirMovimento = false
   const [quadro, setQuadro] = useState(0)
   const [piscando, setPiscando] = useState(false)
   const [boca, setBoca] = useState<string | null>(null)

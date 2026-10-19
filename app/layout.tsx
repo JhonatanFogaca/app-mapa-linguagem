@@ -1,4 +1,3 @@
-import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Fredoka, Nunito } from 'next/font/google'
 import { Cabecalho } from '@/components/cabecalho'
@@ -45,7 +44,6 @@ export default function RootLayout({
       <body className="flex min-h-svh flex-col font-sans antialiased">
         <Cabecalho />
         <div className="flex flex-1 flex-col">{children}</div>
-        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   )
