@@ -27,6 +27,8 @@ export function ParadaMissao({ missao, numero, status }: Props) {
     return () => clearTimeout(t)
   }, [liberada])
 
+  /* No protótipo só a conversa com a Tata existe; as outras paradas ficam como "Em breve". */
+  const jogavel = missao.personagem === "tata"
   const descricaoStatus = concluida ? "concluída" : liberada ? "liberada" : "bloqueada"
 
   const conteudo = (
@@ -49,7 +51,7 @@ export function ParadaMissao({ missao, numero, status }: Props) {
         )}
         {liberada && (
           <span className="absolute -top-3 left-1/2 z-20 -translate-x-1/2 animate-bounce rounded-full bg-tata px-3 py-1 font-heading text-xs font-bold text-white sombra-gordinha [--cor-sombra:var(--tata)] motion-reduce:animate-none">
-            Começar
+            {jogavel ? "Começar" : "Em breve"}
           </span>
         )}
       </div>
@@ -79,7 +81,7 @@ export function ParadaMissao({ missao, numero, status }: Props) {
       className="absolute z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
       style={{ left: `${missao.x}%`, top: `${missao.y}%` }}
     >
-      {liberada ? (
+      {liberada && jogavel ? (
         <Link
           href="/sessao"
           aria-label={`${rotuloAcessivel}. Começar missão`}
@@ -88,7 +90,12 @@ export function ParadaMissao({ missao, numero, status }: Props) {
           {conteudo}
         </Link>
       ) : (
-        <div aria-label={rotuloAcessivel} role="group" aria-disabled={bloqueada} className="flex flex-col items-center p-2">
+        <div
+          aria-label={liberada ? `${rotuloAcessivel}. Em breve` : rotuloAcessivel}
+          role="group"
+          aria-disabled={!concluida}
+          className="flex flex-col items-center p-2"
+        >
           {conteudo}
         </div>
       )}

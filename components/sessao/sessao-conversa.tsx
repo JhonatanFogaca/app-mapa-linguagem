@@ -163,7 +163,7 @@ export function SessaoConversa() {
             </h2>
             <p className="text-pretty text-muted-foreground">A Mari veio comemorar com você.</p>
             <Link
-              href="/missoes?concluidas=1"
+              href="/relatorio/pais"
               className={cn(buttonVariants({ variant: "accent", size: "gordinho" }), "mt-2")}
             >
               Ver resultado

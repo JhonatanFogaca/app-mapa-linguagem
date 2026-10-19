@@ -1,17 +1,18 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { IndicadorProgresso } from "./indicador-progresso"
 import { TelaBoasVindas } from "./tela-boas-vindas"
 import { TelaConsentimento } from "./tela-consentimento"
 import { TelaCadastro } from "./tela-cadastro"
-import { TelaRelatorioEmBreve } from "./tela-relatorio-em-breve"
 
-export type Etapa = "boas-vindas" | "consentimento" | "cadastro" | "fono"
+export type Etapa = "boas-vindas" | "consentimento" | "cadastro"
 
 const PASSOS_RESPONSAVEL: Etapa[] = ["boas-vindas", "consentimento", "cadastro"]
 
 export function FluxoEntrada() {
+  const router = useRouter()
   const [etapa, setEtapa] = useState<Etapa>("boas-vindas")
   const [entradaJaExibida, setEntradaJaExibida] = useState(false)
   const [consentiu, setConsentiu] = useState(false)
@@ -37,7 +38,7 @@ export function FluxoEntrada() {
           <TelaBoasVindas
             animarEntrada={!entradaJaExibida}
             onResponsavel={() => irPara("consentimento")}
-            onFono={() => irPara("fono")}
+            onFono={() => router.push("/relatorio/profissional")}
           />
         )}
         {etapa === "consentimento" && (
@@ -49,7 +50,6 @@ export function FluxoEntrada() {
           />
         )}
         {etapa === "cadastro" && <TelaCadastro onVoltar={() => irPara("consentimento")} />}
-        {etapa === "fono" && <TelaRelatorioEmBreve onVoltar={() => irPara("boas-vindas")} />}
       </main>
     </div>
   )

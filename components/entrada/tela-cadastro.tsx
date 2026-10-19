@@ -1,8 +1,10 @@
 "use client"
 
 import { useState, type FormEvent } from "react"
+import { useRouter } from "next/navigation"
 import { Rocket } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { salvarCrianca } from "@/lib/crianca"
 import { MolduraTela } from "./moldura-tela"
 
 const IDADES = [3, 4, 5, 6, 7, 8, 9, 10]
@@ -11,12 +13,16 @@ export function TelaCadastro({ onVoltar }: { onVoltar: () => void }) {
   const [apelido, setApelido] = useState("")
   const [idade, setIdade] = useState<number | null>(null)
   const [pronto, setPronto] = useState(false)
+  const router = useRouter()
 
   const valido = apelido.trim().length > 0 && idade !== null
 
   const enviar = (e: FormEvent) => {
     e.preventDefault()
-    if (valido) setPronto(true)
+    if (!valido || idade === null) return
+    salvarCrianca({ apelido: apelido.trim(), idade })
+    setPronto(true)
+    router.push("/missoes")
   }
 
   return (
@@ -70,7 +76,7 @@ export function TelaCadastro({ onVoltar }: { onVoltar: () => void }) {
 
         <div className="mt-auto flex flex-col gap-3">
           <p role="status" className="min-h-6 text-center font-semibold text-roxo">
-            {pronto && `Tudo pronto, ${apelido.trim()}! A aventura começa em breve.`}
+            {pronto && `Tudo pronto, ${apelido.trim()}! Vamos para o mapa...`}
           </p>
           <Button type="submit" size="gordinho" disabled={!valido}>
             <Rocket className="size-6" aria-hidden="true" />
