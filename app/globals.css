@@ -1,0 +1,152 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-fredoka), var(--font-nunito), ui-sans-serif, sans-serif;
+
+  --color-azul: var(--azul);
+  --color-rosa: var(--rosa);
+  --color-amarelo: var(--amarelo);
+  --color-roxo: var(--roxo);
+  --color-verde: var(--verde);
+  --color-vermelho: var(--vermelho);
+  --color-creme: var(--creme);
+  --color-tinta: var(--tinta);
+  --color-ceu: var(--ceu);
+
+  --color-sisi: var(--azul);
+  --color-tata: var(--rosa);
+  --color-nana: var(--roxo);
+  --color-belinha: var(--verde);
+  --color-mari: var(--amarelo);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* O app é sempre claro: não há variante escura das variáveis. */
+:root {
+  color-scheme: light;
+
+  --azul: #3b8fff;
+  --rosa: #ff3c8a;
+  --amarelo: #ffb81c;
+  --roxo: #6b3bff;
+  --verde: #22c55e;
+  --vermelho: #ef4444;
+  --creme: #fff9f0;
+  --tinta: #2b2b3a;
+  --ceu: #cfe4ff;
+
+  --background: var(--creme);
+  --foreground: var(--tinta);
+  --card: #ffffff;
+  --card-foreground: var(--tinta);
+  --popover: #ffffff;
+  --popover-foreground: var(--tinta);
+  --primary: var(--azul);
+  --primary-foreground: #ffffff;
+  --secondary: var(--rosa);
+  --secondary-foreground: #ffffff;
+  --accent: var(--amarelo);
+  --accent-foreground: var(--tinta);
+  --success: var(--verde);
+  --success-foreground: #ffffff;
+  --destructive: var(--vermelho);
+  --destructive-foreground: #ffffff;
+  --muted: #fdeedb;
+  --muted-foreground: #5e5e70;
+  --border: #f1e3cf;
+  --input: #ead9c2;
+  --ring: var(--azul);
+
+  --chart-1: var(--azul);
+  --chart-2: var(--rosa);
+  --chart-3: var(--amarelo);
+  --chart-4: var(--roxo);
+  --chart-5: var(--verde);
+
+  --radius: 0.875rem;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: var(--tinta);
+  --sidebar-primary: var(--azul);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #fdeedb;
+  --sidebar-accent-foreground: var(--tinta);
+  --sidebar-border: #f1e3cf;
+  --sidebar-ring: var(--azul);
+}
+
+/* Sombra "gordinha": uma base sólida um tom abaixo da cor do botão + uma sombra difusa suave. */
+@utility sombra-gordinha {
+  --tom-sombra: color-mix(in oklab, var(--cor-sombra, var(--primary)) 72%, black);
+  box-shadow:
+    0 5px 0 0 var(--tom-sombra),
+    0 10px 20px -6px color-mix(in oklab, var(--cor-sombra, var(--primary)) 45%, transparent);
+}
+
+@utility sombra-suave {
+  box-shadow: 0 10px 30px -12px color-mix(in oklab, var(--tinta) 22%, transparent);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    background-color: var(--creme);
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading;
+  }
+}

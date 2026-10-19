@@ -1,0 +1,56 @@
+{
+ "tata": {
+  "proporcao": 0.3868,
+  "quadros": 12,
+  "camadas": {
+   "olhos": {
+    "left": 22.109,
+    "top": 16.053,
+    "width": 59.864,
+    "height": 11.579
+   },
+   "boca-fechada": {
+    "left": 34.014,
+    "top": 25.263,
+    "width": 28.571,
+    "height": 7.105
+   },
+   "boca-meia": {
+    "left": 34.014,
+    "top": 25.263,
+    "width": 28.571,
+    "height": 7.105
+   },
+   "boca-aberta": {
+    "left": 34.014,
+    "top": 25.263,
+    "width": 28.571,
+    "height": 7.105
+   }
+  }
+ },
+ "mari": {
+  "proporcao": 0.4063,
+  "quadros": 12,
+  "camadas": {
+   "olhos": {
+    "left": 26.623,
+    "top": 16.491,
+    "width": 54.545,
+    "height": 11.609
+   },
+   "boca-pequena": {
+    "left": 37.662,
+    "top": 26.121,
+    "width": 22.078,
+    "height": 5.013
+   },
+   "boca-aberta": {
+    "left": 37.662,
+    "top": 26.121,
+    "width": 22.078,
+    "height": 5.013
+   }
+  }
+ }
+}
