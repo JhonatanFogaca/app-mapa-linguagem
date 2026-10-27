@@ -9,10 +9,18 @@ import { buttonVariants } from "@/components/ui/button"
 import { BalaoFala } from "@/components/sessao/balao-fala"
 import { BotaoMicrofone } from "@/components/sessao/botao-microfone"
 import { Confete } from "@/components/sessao/confete"
+import { SeletorModoVoz, type ModoVoz } from "@/components/sessao/seletor-modo-voz"
+import { useReconhecimentoVoz, type ErroVoz } from "@/hooks/use-reconhecimento-voz"
 import { ROTEIRO } from "@/lib/roteiro-sessao"
 import { cn } from "@/lib/utils"
 
 type Fase = "tata" | "aguardando" | "gravando" | "fim"
+
+const MENSAGENS_VOZ: Record<ErroVoz, string> = {
+  "sem-fala": "Não consegui te ouvir. Vamos tentar de novo?",
+  "sem-permissao": "Preciso do microfone. Peça a um adulto para liberar nas permissões do navegador.",
+  indisponivel: "A voz não funcionou agora. Tente de novo ou use o modo simulado.",
+}
 
 const DURACAO_TOTAL = 10 * 60
 const INICIO_CRONOMETRO = 2 * 60 + 30
@@ -25,6 +33,8 @@ export function SessaoConversa() {
   const [falaCrianca, setFalaCrianca] = useState<string | null>(null)
   const [estadoMari, setEstadoMari] = useState<EstadoAnimado>("entrando")
   const [segundos, setSegundos] = useState(INICIO_CRONOMETRO)
+  const [modo, setModo] = useState<ModoVoz>("simulado")
+  const [avisoVoz, setAvisoVoz] = useState<string | null>(null)
   const temporizadores = useRef<ReturnType<typeof setTimeout>[]>([])
 
   const troca = ROTEIRO[indice]
@@ -62,23 +72,42 @@ export function SessaoConversa() {
     temporizadores.current.push(setTimeout(acao, ms))
   }
 
+  function concluirTroca(fala: string) {
+    setFalaCrianca(fala)
+    const ultima = indice === ROTEIRO.length - 1
+    agendar(() => {
+      if (ultima) {
+        setFase("fim")
+        return
+      }
+      setIndice((i) => i + 1)
+      setPalavrasVisiveis(0)
+      setFase("tata")
+    }, ultima ? 1200 : 1500)
+  }
+
+  function falhouVoz(erro: ErroVoz) {
+    setFase("aguardando")
+    setAvisoVoz(MENSAGENS_VOZ[erro])
+  }
+
+  const voz = useReconhecimentoVoz({ onTexto: concluirTroca, onErro: falhouVoz })
+
   function gravar() {
     if (fase !== "aguardando") return
     setFase("gravando")
     setFalaCrianca(null)
-    agendar(() => {
-      setFalaCrianca(troca.crianca)
-      const ultima = indice === ROTEIRO.length - 1
-      agendar(() => {
-        if (ultima) {
-          setFase("fim")
-          return
-        }
-        setIndice((i) => i + 1)
-        setPalavrasVisiveis(0)
-        setFase("tata")
-      }, ultima ? 1200 : 1500)
-    }, 2000)
+    setAvisoVoz(null)
+    if (modo === "real") {
+      voz.iniciar()
+      return
+    }
+    agendar(() => concluirTroca(troca.crianca), 2000)
+  }
+
+  function mudarModo(novo: ModoVoz) {
+    setModo(novo)
+    setAvisoVoz(null)
   }
 
   const terminou = fase === "fim"
@@ -171,7 +200,20 @@ export function SessaoConversa() {
             </Link>
           </div>
         ) : (
-          <BotaoMicrofone gravando={fase === "gravando"} disponivel={fase === "aguardando"} onGravar={gravar} />
+          <div className="flex flex-col items-center gap-5">
+            <BotaoMicrofone gravando={fase === "gravando"} disponivel={fase === "aguardando"} onGravar={gravar} />
+            {avisoVoz && (
+              <p role="alert" className="max-w-md text-balance rounded-2xl bg-card px-4 py-3 text-center font-semibold">
+                {avisoVoz}
+              </p>
+            )}
+            <SeletorModoVoz
+              modo={modo}
+              onMudar={mudarModo}
+              vozDisponivel={voz.suportado}
+              desabilitado={fase === "gravando"}
+            />
+          </div>
         )}
       </div>
 
