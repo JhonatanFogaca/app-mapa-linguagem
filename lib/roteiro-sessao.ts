@@ -1,7 +1,7 @@
 export type Troca = { tata: string; crianca: string }
 
 /** Personagens que já têm missão jogável. */
-export type PersonagemJogavel = "tata" | "sisi"
+export type PersonagemJogavel = "tata" | "sisi" | "nana"
 
 export type Roteiro = {
   personagem: PersonagemJogavel
@@ -14,8 +14,9 @@ export type Roteiro = {
 }
 
 /*
- * TEXTO A VALIDAR (Sisi): o roteiro de Perguntas é uma proposta do desenvolvedor.
- * As perguntas, a ordem e as respostas simuladas precisam ser revisadas pelas fonoaudiólogas.
+ * TEXTO A VALIDAR (Sisi e Naná): os roteiros de Perguntas e de Palavras novas são propostas do
+ * desenvolvedor. As perguntas, a ordem, as palavras e as respostas simuladas precisam ser
+ * revisadas pelas fonoaudiólogas.
  */
 export const ROTEIROS: Record<PersonagemJogavel, Roteiro> = {
   tata: {
@@ -76,10 +77,39 @@ export const ROTEIROS: Record<PersonagemJogavel, Roteiro> = {
       },
     ],
   },
+  nana: {
+    personagem: "nana",
+    rotulo: "Naná",
+    tema: "Palavras novas",
+    fimTitulo: "Uhuul! Você aprendeu palavras novas!",
+    fimTexto: "A Mari veio comemorar com você.",
+    trocas: [
+      {
+        tata: "Oi! Eu sou a Naná e adoro palavras novas! O que a gente usa para não se molhar na chuva?",
+        crianca: "Guarda-chuva!",
+      },
+      {
+        tata: "Isso! Agora uma palavra nova: enorme. Você sabe me dizer uma coisa enorme?",
+        crianca: "O elefante é enorme.",
+      },
+      {
+        tata: "Muito bem! E uma coisa bem pequenininha? Como ela é?",
+        crianca: "Pequena, tipo uma formiga.",
+      },
+      {
+        tata: "Como se chama o lugar onde a gente empresta livros para ler?",
+        crianca: "Biblioteca.",
+      },
+      {
+        tata: "Agora é a sua vez de ensinar! Qual palavra legal você aprendeu esta semana?",
+        crianca: "Eu aprendi borboleta.",
+      },
+    ],
+  },
 }
 
 export function roteiroDaMissao(valor: string | undefined): Roteiro {
-  return valor === "sisi" ? ROTEIROS.sisi : ROTEIROS.tata
+  return valor !== undefined && Object.hasOwn(ROTEIROS, valor) ? ROTEIROS[valor as PersonagemJogavel] : ROTEIROS.tata
 }
 
 /** Roteiro da Tata, usado hoje pelo relatório profissional (ainda simulado). */
