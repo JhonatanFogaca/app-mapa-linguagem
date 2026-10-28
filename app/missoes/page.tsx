@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { MapaMissoes } from "@/components/missoes/mapa-missoes"
+import { MapaComProgresso } from "@/components/missoes/mapa-com-progresso"
 import { MISSOES } from "@/lib/missoes"
 
 export const metadata: Metadata = {
@@ -13,8 +13,9 @@ export default async function PaginaMissoes({
   searchParams: Promise<{ concluidas?: string }>
 }) {
   const { concluidas } = await searchParams
-  const numero = Number.parseInt(concluidas ?? "0", 10)
-  const total = Number.isFinite(numero) ? Math.min(Math.max(numero, 0), MISSOES.length) : 0
+  /* Sem parâmetro (ou inválido), vale o progresso guardado na sessão. */
+  const numero = concluidas === undefined ? Number.NaN : Number.parseInt(concluidas, 10)
+  const daUrl = Number.isFinite(numero) ? Math.min(Math.max(numero, 0), MISSOES.length) : null
 
-  return <MapaMissoes concluidas={total} />
+  return <MapaComProgresso concluidasUrl={daUrl} />
 }

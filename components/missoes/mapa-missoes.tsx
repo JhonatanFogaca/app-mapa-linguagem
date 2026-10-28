@@ -54,14 +54,11 @@ export function MapaMissoes({ concluidas }: { concluidas: number }) {
         </svg>
 
         <ol className="contents">
-          {MISSOES.map((missao, indice) => (
-            <ParadaMissao
-              key={missao.personagem}
-              missao={missao}
-              numero={indice + 1}
-              status={statusDaMissao(indice, concluidas)}
-            />
-          ))}
+          {MISSOES.map((missao, indice) => {
+            const status = statusDaMissao(indice, concluidas)
+            /* key com o status: ao liberar uma parada, ela remonta e a personagem "entra" animada. */
+            return <ParadaMissao key={`${missao.personagem}-${status}`} missao={missao} numero={indice + 1} status={status} />
+          })}
         </ol>
       </section>
     </main>

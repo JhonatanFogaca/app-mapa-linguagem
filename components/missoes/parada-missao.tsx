@@ -51,7 +51,7 @@ export function ParadaMissao({ missao, numero, status }: Props) {
           </span>
         )}
         {liberada && (
-          <span className={cn("absolute -top-3 left-1/2 z-20 -translate-x-1/2 animate-bounce rounded-full px-3 py-1 font-heading text-xs font-bold sombra-gordinha motion-reduce:animate-none", info.etiqueta)}>
+          <span className={cn("absolute -top-3 left-1/2 z-20 -translate-x-1/2 animate-bounce whitespace-nowrap rounded-full px-3 py-1 font-heading text-xs font-bold sombra-gordinha motion-reduce:animate-none", info.etiqueta)}>
             {jogavel ? "Começar" : "Em breve"}
           </span>
         )}
