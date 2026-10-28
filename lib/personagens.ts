@@ -1,4 +1,5 @@
 import type { NomePersonagem } from "@/components/personagem"
+import type { PersonagemJogavel } from "@/lib/roteiro-sessao"
 
 type InfoPersonagem = {
   nome: NomePersonagem
@@ -86,7 +87,7 @@ export type CoresSessao = {
   borda: string
 }
 
-export const CORES_SESSAO: Record<"tata" | "sisi", CoresSessao> = {
+export const CORES_SESSAO: Record<PersonagemJogavel, CoresSessao> = {
   tata: {
     texto: "text-tata",
     painel: "bg-tata/10",
@@ -110,5 +111,17 @@ export const CORES_SESSAO: Record<"tata" | "sisi", CoresSessao> = {
     pontoVazio: "bg-sisi/20",
     seletorAtivo: "bg-sisi text-white",
     borda: "border-sisi/25",
+  },
+  nana: {
+    texto: "text-nana",
+    painel: "bg-nana/12",
+    botao: "bg-nana [--cor-sombra:var(--roxo)]",
+    pulso: "bg-nana/30",
+    pulsoSuave: "bg-nana/15",
+    ponto: "bg-nana",
+    pontoAtual: "bg-nana/40",
+    pontoVazio: "bg-nana/20",
+    seletorAtivo: "bg-nana text-white",
+    borda: "border-nana/25",
   },
 }
