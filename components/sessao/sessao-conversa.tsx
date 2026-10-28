@@ -14,6 +14,7 @@ import { SeletorModoVoz, type ModoVoz } from "@/components/sessao/seletor-modo-v
 import { useReconhecimentoVoz, type ErroVoz } from "@/hooks/use-reconhecimento-voz"
 import { CORES_SESSAO, usaPersonagemAnimado } from "@/lib/personagens"
 import { MISSOES } from "@/lib/missoes"
+import { concluirMissao } from "@/lib/progresso"
 import type { Roteiro } from "@/lib/roteiro-sessao"
 import { cn } from "@/lib/utils"
 
@@ -56,6 +57,10 @@ export function SessaoConversa({ roteiro }: { roteiro: Roteiro }) {
     const t = setTimeout(() => setPalavrasVisiveis((p) => p + 1), palavrasVisiveis === 0 ? 600 : 230)
     return () => clearTimeout(t)
   }, [fase, palavrasVisiveis, palavras.length])
+
+  useEffect(() => {
+    if (fase === "fim") concluirMissao(numeroMissao)
+  }, [fase, numeroMissao])
 
   useEffect(() => {
     if (fase !== "fim") return
@@ -208,7 +213,7 @@ export function SessaoConversa({ roteiro }: { roteiro: Roteiro }) {
               Ver resultado
               <ArrowRight aria-hidden="true" />
             </Link>
-            <Link href={`/missoes?concluidas=${numeroMissao}`} className={buttonVariants({ variant: "outline", size: "gordinho" })}>
+            <Link href="/missoes" className={buttonVariants({ variant: "outline", size: "gordinho" })}>
               Voltar ao mapa
             </Link>
           </div>
