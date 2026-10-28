@@ -6,9 +6,12 @@ type Props = {
   autor: string
   children: ReactNode
   className?: string
+  /* Classes de cor da personagem (texto do nome e borda do balão). */
+  corNome?: string
+  corBorda?: string
 }
 
-export function BalaoFala({ lado, autor, children, className }: Props) {
+export function BalaoFala({ lado, autor, children, className, corNome = "text-tata", corBorda = "border-tata/25" }: Props) {
   const daTata = lado === "esquerda"
 
   return (
@@ -16,7 +19,7 @@ export function BalaoFala({ lado, autor, children, className }: Props) {
       <span
         className={cn(
           "mb-1 block font-heading text-sm font-bold",
-          daTata ? "text-tata" : "text-right text-primary",
+          daTata ? corNome : "text-right text-primary",
         )}
       >
         {autor}
@@ -25,7 +28,7 @@ export function BalaoFala({ lado, autor, children, className }: Props) {
         className={cn(
           "relative rounded-[1.75rem] px-5 py-4 text-pretty font-heading text-lg font-medium leading-snug md:text-xl",
           daTata
-            ? "rounded-tl-md border-4 border-tata/25 bg-card text-foreground sombra-suave"
+            ? cn("rounded-tl-md border-4 bg-card text-foreground sombra-suave", corBorda)
             : "rounded-tr-md bg-primary text-primary-foreground sombra-gordinha [--cor-sombra:var(--primary)]",
         )}
       >

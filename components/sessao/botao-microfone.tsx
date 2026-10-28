@@ -2,17 +2,19 @@
 
 import { motion, useReducedMotion } from "framer-motion"
 import { Mic } from "lucide-react"
+import type { CoresSessao } from "@/lib/personagens"
 import { cn } from "@/lib/utils"
 
 type Props = {
   gravando: boolean
   disponivel: boolean
   onGravar: () => void
+  cores: CoresSessao
 }
 
 const ALTURAS_ONDA = [0.4, 0.75, 1, 0.6, 0.9, 0.5, 0.8]
 
-export function BotaoMicrofone({ gravando, disponivel, onGravar }: Props) {
+export function BotaoMicrofone({ gravando, disponivel, onGravar, cores }: Props) {
   const reduzirMovimento = useReducedMotion()
   const pulsando = disponivel && !gravando
 
@@ -21,8 +23,8 @@ export function BotaoMicrofone({ gravando, disponivel, onGravar }: Props) {
       <div className="relative flex size-36 items-center justify-center md:size-40">
         {pulsando && (
           <>
-            <span className="absolute inset-0 rounded-full bg-tata/30 motion-safe:animate-ping" aria-hidden="true" />
-            <span className="absolute -inset-3 rounded-full bg-tata/15 motion-safe:animate-pulse" aria-hidden="true" />
+            <span className={cn("absolute inset-0 rounded-full motion-safe:animate-ping", cores.pulso)} aria-hidden="true" />
+            <span className={cn("absolute -inset-3 rounded-full motion-safe:animate-pulse", cores.pulsoSuave)} aria-hidden="true" />
           </>
         )}
         <button
@@ -32,7 +34,8 @@ export function BotaoMicrofone({ gravando, disponivel, onGravar }: Props) {
           aria-label={gravando ? "Gravando sua resposta" : "Segure para falar"}
           className={cn(
             "relative flex size-36 items-center justify-center rounded-full text-white outline-none transition-all focus-visible:ring-8 focus-visible:ring-ring/40 md:size-40",
-            "bg-tata sombra-gordinha [--cor-sombra:var(--tata)] active:translate-y-1",
+            cores.botao,
+            "sombra-gordinha active:translate-y-1",
             "disabled:cursor-not-allowed",
             !disponivel && !gravando && "bg-muted-foreground/40 shadow-none",
             gravando && "scale-95",

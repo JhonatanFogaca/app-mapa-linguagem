@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { AnimatePresence, motion } from "framer-motion"
 import { ArrowRight, Clock } from "lucide-react"
+import { Personagem } from "@/components/personagem"
 import { PersonagemAnimado, type EstadoAnimado } from "@/components/personagem-animado"
 import { buttonVariants } from "@/components/ui/button"
 import { BalaoFala } from "@/components/sessao/balao-fala"
@@ -11,7 +12,9 @@ import { BotaoMicrofone } from "@/components/sessao/botao-microfone"
 import { Confete } from "@/components/sessao/confete"
 import { SeletorModoVoz, type ModoVoz } from "@/components/sessao/seletor-modo-voz"
 import { useReconhecimentoVoz, type ErroVoz } from "@/hooks/use-reconhecimento-voz"
-import { ROTEIRO } from "@/lib/roteiro-sessao"
+import { CORES_SESSAO, usaPersonagemAnimado } from "@/lib/personagens"
+import { MISSOES } from "@/lib/missoes"
+import type { Roteiro } from "@/lib/roteiro-sessao"
 import { cn } from "@/lib/utils"
 
 type Fase = "tata" | "aguardando" | "gravando" | "fim"
@@ -26,7 +29,10 @@ const DURACAO_TOTAL = 10 * 60
 const INICIO_CRONOMETRO = 2 * 60 + 30
 const formatar = (s: number) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`
 
-export function SessaoConversa() {
+export function SessaoConversa({ roteiro }: { roteiro: Roteiro }) {
+  const ROTEIRO = roteiro.trocas
+  const cores = CORES_SESSAO[roteiro.personagem]
+  const numeroMissao = MISSOES.findIndex((m) => m.personagem === roteiro.personagem) + 1
   const [indice, setIndice] = useState(0)
   const [fase, setFase] = useState<Fase>("tata")
   const [palavrasVisiveis, setPalavrasVisiveis] = useState(0)
@@ -116,8 +122,8 @@ export function SessaoConversa() {
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-4 py-6 md:px-6 md:py-8">
       <div className="flex items-center justify-between gap-4">
         <div className="flex flex-col">
-          <span className="font-heading text-sm font-bold uppercase tracking-wide text-tata">Histórias</span>
-          <h1 className="text-balance text-2xl font-bold md:text-3xl">Conversa com a Tata</h1>
+          <span className={cn("font-heading text-sm font-bold uppercase tracking-wide", cores.texto)}>{roteiro.tema}</span>
+          <h1 className="text-balance text-2xl font-bold md:text-3xl">Conversa com a {roteiro.rotulo}</h1>
         </div>
         <div
           className="flex items-center gap-1.5 rounded-full border-2 border-border bg-card px-3 py-1.5 text-sm font-semibold tabular-nums text-muted-foreground"
@@ -132,15 +138,19 @@ export function SessaoConversa() {
 
       <section
         aria-label="Conversa"
-        className="relative flex flex-col gap-6 overflow-hidden rounded-[2.5rem] border-4 border-card bg-tata/10 p-5 sombra-suave md:p-8"
+        className={cn("relative flex flex-col gap-6 overflow-hidden rounded-[2.5rem] border-4 border-card p-5 sombra-suave md:p-8", cores.painel)}
       >
         <div className="flex flex-col items-center gap-4 md:flex-row md:items-end md:gap-6">
           <div className="shrink-0">
-            <PersonagemAnimado nome="tata" altura={320} estado={tataFalando ? "falando" : "parado"} />
+            {usaPersonagemAnimado(roteiro.personagem) ? (
+              <PersonagemAnimado nome={roteiro.personagem} altura={320} estado={tataFalando ? "falando" : "parado"} />
+            ) : (
+              <Personagem nome={roteiro.personagem} altura={320} estado={tataFalando ? "falando" : "parado"} />
+            )}
           </div>
 
           <div className="flex w-full flex-1 flex-col gap-5 md:pb-10">
-            <BalaoFala lado="esquerda" autor="Tata" className="self-start">
+            <BalaoFala lado="esquerda" autor={roteiro.rotulo} corNome={cores.texto} corBorda={cores.borda} className="self-start">
               <span aria-hidden="true">
                 {palavras.map((palavra, i) => (
                   <span key={`${indice}-${i}`} className={cn("transition-opacity duration-200", i < palavrasVisiveis ? "opacity-100" : "opacity-0")}>
@@ -176,7 +186,7 @@ export function SessaoConversa() {
               key={i}
               className={cn(
                 "h-2.5 rounded-full transition-all",
-                i < indice || (i === indice && falaCrianca) ? "w-6 bg-tata" : i === indice ? "w-6 bg-tata/40" : "w-2.5 bg-tata/20",
+                i < indice || (i === indice && falaCrianca) ? `w-6 ${cores.ponto}` : i === indice ? `w-6 ${cores.pontoAtual}` : `w-2.5 ${cores.pontoVazio}`,
               )}
             />
           ))}
@@ -188,9 +198,9 @@ export function SessaoConversa() {
           <div className="flex flex-col items-center gap-3 text-center">
             <PersonagemAnimado nome="mari" altura={240} estado={estadoMari} />
             <h2 className="text-balance text-3xl font-bold" aria-live="polite">
-              Uhuul! Você ajudou o Pipo!
+              {roteiro.fimTitulo}
             </h2>
-            <p className="text-pretty text-muted-foreground">A Mari veio comemorar com você.</p>
+            <p className="text-pretty text-muted-foreground">{roteiro.fimTexto}</p>
             <Link
               href="/relatorio/pais"
               className={cn(buttonVariants({ variant: "accent", size: "gordinho" }), "mt-2")}
@@ -198,10 +208,13 @@ export function SessaoConversa() {
               Ver resultado
               <ArrowRight aria-hidden="true" />
             </Link>
+            <Link href={`/missoes?concluidas=${numeroMissao}`} className={buttonVariants({ variant: "outline", size: "gordinho" })}>
+              Voltar ao mapa
+            </Link>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-5">
-            <BotaoMicrofone gravando={fase === "gravando"} disponivel={fase === "aguardando"} onGravar={gravar} />
+            <BotaoMicrofone gravando={fase === "gravando"} disponivel={fase === "aguardando"} onGravar={gravar} cores={cores} />
             {avisoVoz && (
               <p role="alert" className="max-w-md text-balance rounded-2xl bg-card px-4 py-3 text-center font-semibold">
                 {avisoVoz}
@@ -212,6 +225,7 @@ export function SessaoConversa() {
               onMudar={mudarModo}
               vozDisponivel={voz.suportado}
               desabilitado={fase === "gravando"}
+              cores={cores}
             />
           </div>
         )}
