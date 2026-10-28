@@ -1,5 +1,6 @@
 "use client"
 
+import type { CoresSessao } from "@/lib/personagens"
 import { cn } from "@/lib/utils"
 
 export type ModoVoz = "simulado" | "real"
@@ -9,6 +10,7 @@ type Props = {
   onMudar: (modo: ModoVoz) => void
   vozDisponivel: boolean
   desabilitado: boolean
+  cores: CoresSessao
 }
 
 const OPCOES: { valor: ModoVoz; rotulo: string }[] = [
@@ -16,7 +18,7 @@ const OPCOES: { valor: ModoVoz; rotulo: string }[] = [
   { valor: "real", rotulo: "Voz real" },
 ]
 
-export function SeletorModoVoz({ modo, onMudar, vozDisponivel, desabilitado }: Props) {
+export function SeletorModoVoz({ modo, onMudar, vozDisponivel, desabilitado, cores }: Props) {
   return (
     <div className="flex flex-col items-center gap-2 text-center">
       <div role="group" aria-label="Modo da conversa" className="flex rounded-full border-2 border-border bg-card p-1">
@@ -32,7 +34,7 @@ export function SeletorModoVoz({ modo, onMudar, vozDisponivel, desabilitado }: P
               onClick={() => onMudar(valor)}
               className={cn(
                 "min-h-11 min-w-28 rounded-full px-4 text-sm font-bold outline-none transition-colors focus-visible:ring-4 focus-visible:ring-ring/40",
-                ativo ? "bg-tata text-white" : "text-muted-foreground hover:bg-muted",
+                ativo ? cores.seletorAtivo : "text-muted-foreground hover:bg-muted",
                 bloqueado && !ativo && "cursor-not-allowed opacity-50",
               )}
             >

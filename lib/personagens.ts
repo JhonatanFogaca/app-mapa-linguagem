@@ -71,3 +71,44 @@ export const INFO_PERSONAGEM = Object.fromEntries(PERSONAGENS.map((p) => [p.nome
 >
 
 export const usaPersonagemAnimado = (nome: NomePersonagem) => nome === "tata" || nome === "mari"
+
+/* Cores da tela de conversa por personagem. Classes completas e estáticas para o Tailwind detectar cada uma. */
+export type CoresSessao = {
+  texto: string
+  painel: string
+  botao: string
+  pulso: string
+  pulsoSuave: string
+  ponto: string
+  pontoAtual: string
+  pontoVazio: string
+  seletorAtivo: string
+  borda: string
+}
+
+export const CORES_SESSAO: Record<"tata" | "sisi", CoresSessao> = {
+  tata: {
+    texto: "text-tata",
+    painel: "bg-tata/10",
+    botao: "bg-tata [--cor-sombra:var(--rosa)]",
+    pulso: "bg-tata/30",
+    pulsoSuave: "bg-tata/15",
+    ponto: "bg-tata",
+    pontoAtual: "bg-tata/40",
+    pontoVazio: "bg-tata/20",
+    seletorAtivo: "bg-tata text-white",
+    borda: "border-tata/25",
+  },
+  sisi: {
+    texto: "text-sisi",
+    painel: "bg-sisi/15",
+    botao: "bg-sisi [--cor-sombra:var(--azul)]",
+    pulso: "bg-sisi/30",
+    pulsoSuave: "bg-sisi/15",
+    ponto: "bg-sisi",
+    pontoAtual: "bg-sisi/40",
+    pontoVazio: "bg-sisi/20",
+    seletorAtivo: "bg-sisi text-white",
+    borda: "border-sisi/25",
+  },
+}

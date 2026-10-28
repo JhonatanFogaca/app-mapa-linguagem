@@ -8,7 +8,7 @@ export type Missao = {
   y: number
 }
 
-/* A Tata abre o mapa: é a missão jogável do protótipo (a conversa em /sessao). */
+/* Tata e Sisi são jogáveis (conversa em /sessao?missao=...); as demais paradas ainda são "Em breve". */
 export const MISSOES: Missao[] = [
   { personagem: "tata", tema: "Histórias", x: 24, y: 13 },
   { personagem: "sisi", tema: "Perguntas", x: 74, y: 31 },

@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Lock, Star } from "lucide-react"
 import { Personagem, type EstadoPersonagem } from "@/components/personagem"
 import { INFO_PERSONAGEM } from "@/lib/personagens"
+import { ROTEIROS } from "@/lib/roteiro-sessao"
 import type { Missao, StatusMissao } from "@/lib/missoes"
 import { cn } from "@/lib/utils"
 
@@ -27,8 +28,8 @@ export function ParadaMissao({ missao, numero, status }: Props) {
     return () => clearTimeout(t)
   }, [liberada])
 
-  /* No protótipo só a conversa com a Tata existe; as outras paradas ficam como "Em breve". */
-  const jogavel = missao.personagem === "tata"
+  /* Só as missões com roteiro são jogáveis; as outras paradas ficam como "Em breve". */
+  const jogavel = missao.personagem in ROTEIROS
   const descricaoStatus = concluida ? "concluída" : liberada ? "liberada" : "bloqueada"
 
   const conteudo = (
@@ -50,7 +51,7 @@ export function ParadaMissao({ missao, numero, status }: Props) {
           </span>
         )}
         {liberada && (
-          <span className="absolute -top-3 left-1/2 z-20 -translate-x-1/2 animate-bounce rounded-full bg-tata px-3 py-1 font-heading text-xs font-bold text-white sombra-gordinha [--cor-sombra:var(--tata)] motion-reduce:animate-none">
+          <span className={cn("absolute -top-3 left-1/2 z-20 -translate-x-1/2 animate-bounce rounded-full px-3 py-1 font-heading text-xs font-bold sombra-gordinha motion-reduce:animate-none", info.etiqueta)}>
             {jogavel ? "Começar" : "Em breve"}
           </span>
         )}
@@ -83,7 +84,7 @@ export function ParadaMissao({ missao, numero, status }: Props) {
     >
       {liberada && jogavel ? (
         <Link
-          href="/sessao"
+          href={`/sessao?missao=${missao.personagem}`}
           aria-label={`${rotuloAcessivel}. Começar missão`}
           className="flex flex-col items-center rounded-3xl p-2 outline-none transition-transform hover:scale-105 focus-visible:ring-4 focus-visible:ring-ring/50"
         >
