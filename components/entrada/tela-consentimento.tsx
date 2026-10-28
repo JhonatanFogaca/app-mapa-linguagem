@@ -12,8 +12,9 @@ type Props = {
 const ITENS = [
   {
     icone: Mic,
-    titulo: "A conversa será gravada",
-    texto: "Durante as brincadeiras, gravamos a voz da criança para analisar como ela fala e se comunica.",
+    titulo: "Não gravamos a voz da criança",
+    texto:
+      "O app não guarda áudio. Se o adulto ligar a \"Voz real\", o microfone do navegador é usado para transformar a fala em texto. No Chrome, esse áudio é enviado ao Google só para essa transcrição. O texto fica apenas na tela.",
   },
   {
     icone: Stethoscope,
@@ -23,9 +24,12 @@ const ITENS = [
   {
     icone: ShieldCheck,
     titulo: "Os dados são protegidos",
-    texto: "A voz de crianças é um dado sensível. Ela é tratada e protegida conforme a LGPD (Lei Geral de Proteção de Dados).",
+    texto: "A voz de crianças é um dado sensível. Pedimos só apelido e idade, e o tratamento segue a LGPD (Lei Geral de Proteção de Dados).",
   },
 ]
+
+// TEXTO A VALIDAR: a redação do consentimento é uma proposta e precisa de revisão
+// das fonoaudiólogas e de quem responde pela LGPD antes de uso com crianças reais.
 
 const CORES_ICONE = ["bg-azul", "bg-roxo", "bg-rosa"]
 

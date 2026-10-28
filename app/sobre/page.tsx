@@ -67,8 +67,12 @@ export default function PaginaSobre() {
         <ul className="flex list-disc flex-col gap-1 pl-5">
           <li>É uma triagem, não um diagnóstico. Só um(a) fonoaudiólogo(a) avalia a criança.</li>
           <li>Pedimos apenas apelido e idade, nunca o nome completo.</li>
-          <li>Na versão completa, o uso da voz depende do consentimento do responsável (LGPD).</li>
-          <li>No protótipo nada é gravado nem enviado: os dados ficam só no seu navegador.</li>
+          <li>O uso da voz depende do consentimento do responsável (LGPD).</li>
+          <li>O app não grava áudio e guarda só apelido e idade, no seu navegador.</li>
+          <li>
+            Com a &quot;Voz real&quot; ligada, o navegador transforma a fala em texto. No Chrome, o áudio vai ao Google
+            apenas para essa transcrição. No modo simulado, nada é captado.
+          </li>
         </ul>
       </section>
     </main>
