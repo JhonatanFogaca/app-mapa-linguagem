@@ -53,7 +53,7 @@ export function TranscricaoSessao({ apelido, transcricao }: { apelido: string; t
               </p>
               <ol className="flex flex-col gap-2">
                 {respostas.map((r, i) => (
-                  <li key={i} className="flex flex-col gap-1 rounded-2xl bg-muted px-4 py-2">
+                  <li key={i} className="flex flex-col gap-1 rounded-2xl bg-muted px-4 py-2 print:break-inside-avoid">
                     <span className="text-sm text-muted-foreground">
                       {roteiro.rotulo}: {roteiro.trocas[i]?.tata}
                     </span>

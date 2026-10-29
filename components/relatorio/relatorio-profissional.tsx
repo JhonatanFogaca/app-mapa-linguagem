@@ -35,7 +35,7 @@ export function RelatorioProfissional() {
       </header>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <section aria-labelledby="t-perfil" className="rounded-3xl border-2 border-border bg-card p-4 sombra-suave md:p-5">
+        <section aria-labelledby="t-perfil" className="rounded-3xl border-2 border-border bg-card p-4 sombra-suave print:break-inside-avoid md:p-5">
           <h2 id="t-perfil" className="font-heading text-xl font-bold">Perfil por domínio</h2>
           <GraficoRadar />
         </section>
