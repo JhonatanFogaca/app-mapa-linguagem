@@ -14,7 +14,7 @@ const ITENS = [
     icone: Mic,
     titulo: "Não gravamos a voz da criança",
     texto:
-      "O app não guarda áudio. Se o adulto ligar a \"Voz real\", o microfone do navegador é usado para transformar a fala em texto. No Chrome, esse áudio é enviado ao Google só para essa transcrição. O texto fica apenas na tela.",
+      "O app não guarda áudio. Se o adulto ligar a \"Voz real\", o microfone do navegador é usado para transformar a fala em texto. No Chrome, esse áudio é enviado ao Google só para essa transcrição. O texto fica guardado só neste navegador, nesta aba, para montar o relatório, e some quando a aba é fechada.",
   },
   {
     icone: Stethoscope,

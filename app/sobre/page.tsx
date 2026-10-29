@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 
 const ETAPAS = [
   { icone: Sparkles, titulo: "A criança brinca", texto: "Em missões com personagens animadas, ela conversa e conta histórias, sem perceber que está sendo avaliada." },
-  { icone: Mic, titulo: "A voz é reconhecida", texto: "O microfone capta a fala e a transforma em texto e em medidas, como o tempo de resposta." },
-  { icone: Brain, titulo: "A IA analisa", texto: "Sintaxe e gramática, vocabulário, coerência narrativa e processamento são comparados com o esperado para a idade." },
-  { icone: ShieldCheck, titulo: "Dois relatórios", texto: "Um técnico para a fonoaudióloga e outro simples, com dicas, para a família." },
+  { icone: Mic, titulo: "A conversa vira texto", texto: "Com a \"Voz real\" ligada, o navegador transforma a fala em texto. No modo simulado, as respostas vêm do roteiro. O app não grava áudio." },
+  { icone: Brain, titulo: "A análise (próximo passo)", texto: "A ideia é comparar sintaxe e gramática, vocabulário, coerência narrativa e processamento com o esperado para a idade, com critérios das fonoaudiólogas. Nesta demonstração, as pontuações são fictícias." },
+  { icone: ShieldCheck, titulo: "Dois relatórios", texto: "Um técnico para a fonoaudióloga, com a transcrição da conversa, e outro simples, com dicas, para a família. Os resultados dos domínios ainda são de exemplo." },
 ]
 
 export default function PaginaSobre() {
@@ -68,7 +68,10 @@ export default function PaginaSobre() {
           <li>É uma triagem, não um diagnóstico. Só um(a) fonoaudiólogo(a) avalia a criança.</li>
           <li>Pedimos apenas apelido e idade, nunca o nome completo.</li>
           <li>O uso da voz depende do consentimento do responsável (LGPD).</li>
-          <li>O app não grava áudio e guarda só apelido e idade, no seu navegador.</li>
+          <li>
+            O app não grava áudio. Guarda só apelido, idade e o texto das respostas, no seu navegador, até a aba ser
+            fechada.
+          </li>
           <li>
             Com a &quot;Voz real&quot; ligada, o navegador transforma a fala em texto. No Chrome, o áudio vai ao Google
             apenas para essa transcrição. No modo simulado, nada é captado.
