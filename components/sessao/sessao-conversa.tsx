@@ -16,6 +16,7 @@ import { CORES_SESSAO, usaPersonagemAnimado } from "@/lib/personagens"
 import { MISSOES } from "@/lib/missoes"
 import { concluirMissao } from "@/lib/progresso"
 import type { Roteiro } from "@/lib/roteiro-sessao"
+import { gravarResposta, type OrigemResposta } from "@/lib/transcricao"
 import { cn } from "@/lib/utils"
 
 type Fase = "tata" | "aguardando" | "gravando" | "fim"
@@ -83,7 +84,8 @@ export function SessaoConversa({ roteiro }: { roteiro: Roteiro }) {
     temporizadores.current.push(setTimeout(acao, ms))
   }
 
-  function concluirTroca(fala: string) {
+  function concluirTroca(fala: string, origem: OrigemResposta) {
+    gravarResposta(roteiro.personagem, indice, fala, origem)
     setFalaCrianca(fala)
     const ultima = indice === ROTEIRO.length - 1
     agendar(() => {
@@ -102,7 +104,7 @@ export function SessaoConversa({ roteiro }: { roteiro: Roteiro }) {
     setAvisoVoz(MENSAGENS_VOZ[erro])
   }
 
-  const voz = useReconhecimentoVoz({ onTexto: concluirTroca, onErro: falhouVoz })
+  const voz = useReconhecimentoVoz({ onTexto: (texto) => concluirTroca(texto, "real"), onErro: falhouVoz })
 
   function gravar() {
     if (fase !== "aguardando") return
@@ -113,7 +115,7 @@ export function SessaoConversa({ roteiro }: { roteiro: Roteiro }) {
       voz.iniciar()
       return
     }
-    agendar(() => concluirTroca(troca.crianca), 2000)
+    agendar(() => concluirTroca(troca.crianca, "simulado"), 2000)
   }
 
   function mudarModo(novo: ModoVoz) {

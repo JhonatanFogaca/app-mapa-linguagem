@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react"
 import { reiniciarProgresso } from "@/lib/progresso"
+import { reiniciarTranscricao } from "@/lib/transcricao"
 
 /*
  * Dados da criança só para a demonstração: ficam na sessão do navegador (sessionStorage)
@@ -13,8 +14,9 @@ const CHAVE = "mapa-da-linguagem:crianca"
 export const CRIANCA_EXEMPLO: Crianca = { apelido: "Lia", idade: 5 }
 
 export function salvarCrianca(crianca: Crianca) {
-  /* Outra criança começa com o mapa do zero. */
+  /* Outra criança começa com o mapa e a transcrição do zero. */
   reiniciarProgresso()
+  reiniciarTranscricao()
   try {
     sessionStorage.setItem(CHAVE, JSON.stringify(crianca))
   } catch {
