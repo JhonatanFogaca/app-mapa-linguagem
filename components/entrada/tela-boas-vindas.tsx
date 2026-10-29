@@ -36,11 +36,11 @@ export function TelaBoasVindas({ animarEntrada, onResponsavel, onFono }: Props) 
       </div>
 
       <div className="relative flex w-full max-w-md flex-col gap-3 md:flex-row md:max-w-xl">
-        <Button size="gordinho" onClick={onResponsavel} className="flex-1">
+        <Button size="gordinho" onClick={onResponsavel} className="md:flex-1">
           <HeartHandshake aria-hidden="true" />
           Sou responsável
         </Button>
-        <Button size="gordinho" variant="secondary" onClick={onFono} className="flex-1">
+        <Button size="gordinho" variant="secondary" onClick={onFono} className="md:flex-1">
           <Stethoscope aria-hidden="true" />
           Sou fonoaudióloga
         </Button>
