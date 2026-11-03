@@ -20,6 +20,10 @@ export function RelatorioPais() {
         </p>
       </section>
 
+      <p role="note" className="rounded-2xl bg-amarelo/15 px-4 py-3 text-sm font-semibold">
+        Resultados de exemplo, só para a demonstração: ainda não são calculados a partir da fala da criança.
+      </p>
+
       <section aria-labelledby="t-resumo" className="flex flex-col gap-3">
         <h2 id="t-resumo" className="flex items-center gap-2 font-heading text-2xl font-bold">
           <Heart className="size-6 text-rosa" aria-hidden="true" />O que vimos de bom
@@ -45,10 +49,10 @@ export function RelatorioPais() {
       <p role="note" className="rounded-2xl bg-muted p-4 text-sm font-semibold">{AVISO_TRIAGEM}</p>
 
       <div className="flex flex-col gap-3 sm:flex-row print:hidden">
-        <Button size="gordinho" className="flex-1" nativeButton={false} render={<Link href="/" />}>
+        <Button size="gordinho" className="sm:flex-1" nativeButton={false} render={<Link href="/" />}>
           <Home aria-hidden="true" />Voltar ao início
         </Button>
-        <Button size="gordinho" variant="outline" className="flex-1" onClick={() => window.print()}>
+        <Button size="gordinho" variant="outline" className="sm:flex-1" onClick={() => window.print()}>
           <Printer aria-hidden="true" />Imprimir
         </Button>
       </div>

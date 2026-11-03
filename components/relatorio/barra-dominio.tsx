@@ -8,7 +8,7 @@ export function BarraDominio({ d, texto }: { d: Dominio; texto: string }) {
   const info = INFO_PERSONAGEM[d.personagem]
   const s = situacao(d)
   return (
-    <article className="rounded-3xl border-2 border-border bg-card p-4 sombra-suave md:p-5">
+    <article className="rounded-3xl border-2 border-border bg-card p-4 sombra-suave print:break-inside-avoid md:p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="font-heading text-lg font-bold">{d.nome}</h3>
         <span className={`rounded-full px-3 py-1 text-xs font-bold ${s === "atencao" ? "bg-amarelo/30 text-tinta" : "bg-verde/20 text-tinta"}`}>
