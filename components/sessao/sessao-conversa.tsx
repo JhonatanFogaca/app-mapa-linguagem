@@ -99,9 +99,9 @@ export function SessaoConversa({ roteiro }: { roteiro: Roteiro }) {
     }, ultima ? 1200 : 1500)
   }
 
-  function falhouVoz(erro: ErroVoz) {
+  function falhouVoz(erro: ErroVoz, detalhe?: string) {
     setFase("aguardando")
-    setAvisoVoz(MENSAGENS_VOZ[erro])
+    setAvisoVoz(detalhe ? `${MENSAGENS_VOZ[erro]} (código: ${detalhe})` : MENSAGENS_VOZ[erro])
   }
 
   const voz = useReconhecimentoVoz({ onTexto: (texto) => concluirTroca(texto, "real"), onErro: falhouVoz })

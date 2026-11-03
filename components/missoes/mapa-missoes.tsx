@@ -1,3 +1,6 @@
+import Link from "next/link"
+import { FileText, Stethoscope } from "lucide-react"
+import { buttonVariants } from "@/components/ui/button"
 import { MISSOES, statusDaMissao } from "@/lib/missoes"
 import { BarraProgresso } from "@/components/missoes/barra-progresso"
 import { ParadaMissao } from "@/components/missoes/parada-missao"
@@ -60,6 +63,23 @@ export function MapaMissoes({ concluidas }: { concluidas: number }) {
             return <ParadaMissao key={`${missao.personagem}-${status}`} missao={missao} numero={indice + 1} status={status} />
           })}
         </ol>
+      </section>
+
+      <section aria-labelledby="t-relatorio" className="flex flex-col gap-3 rounded-3xl border-2 border-border bg-card p-5 sombra-suave">
+        <h2 id="t-relatorio" className="font-heading text-xl font-bold">Ver o relatório</h2>
+        <p className="text-pretty text-muted-foreground">
+          {concluidas > 0
+            ? "Dá para ver o relatório a qualquer momento e voltar aqui para jogar mais missões: quanto mais conversa, mais completo ele fica."
+            : "Jogue ao menos uma missão para o relatório usar a conversa de verdade."}
+        </p>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Link href="/relatorio/pais" className={buttonVariants({ size: "gordinho" })}>
+            <FileText aria-hidden="true" />Ver relatório
+          </Link>
+          <Link href="/relatorio/profissional" className={buttonVariants({ variant: "outline", size: "gordinho" })}>
+            <Stethoscope aria-hidden="true" />Sou fonoaudióloga
+          </Link>
+        </div>
       </section>
     </main>
   )

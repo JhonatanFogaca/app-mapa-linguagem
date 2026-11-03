@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Download, Home, Printer } from "lucide-react"
+import { Download, Home, Map, Printer } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAnalise } from "@/lib/analise"
 import { useCrianca, useDataHoje } from "@/lib/crianca"
@@ -86,9 +86,10 @@ export function RelatorioProfissional() {
       <p role="note" className="rounded-2xl bg-muted p-4 text-sm font-semibold">{AVISO_TRIAGEM}</p>
 
       <div className="flex flex-col gap-3 sm:flex-row print:hidden">
+        <Button size="lg" nativeButton={false} render={<Link href="/missoes" />}><Map aria-hidden="true" />Voltar ao mapa</Button>
         <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/" />}><Home aria-hidden="true" />Início</Button>
         <Button size="lg" variant="outline" onClick={() => window.print()}><Printer aria-hidden="true" />Imprimir</Button>
-        <Button size="lg" onClick={() => window.print()}><Download aria-hidden="true" />Salvar como PDF</Button>
+        <Button size="lg" variant="outline" onClick={() => window.print()}><Download aria-hidden="true" />Salvar como PDF</Button>
       </div>
     </main>
   )

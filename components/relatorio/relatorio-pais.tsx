@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Heart, Home, Lightbulb, Printer } from "lucide-react"
+import { Heart, Home, Lightbulb, Map, Printer } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Personagem } from "@/components/personagem"
 import { useAnalise } from "@/lib/analise"
@@ -61,8 +61,11 @@ export function RelatorioPais() {
       <p role="note" className="rounded-2xl bg-muted p-4 text-sm font-semibold">{AVISO_TRIAGEM}</p>
 
       <div className="flex flex-col gap-3 sm:flex-row print:hidden">
-        <Button size="gordinho" className="sm:flex-1" nativeButton={false} render={<Link href="/" />}>
-          <Home aria-hidden="true" />Voltar ao início
+        <Button size="gordinho" className="sm:flex-1" nativeButton={false} render={<Link href="/missoes" />}>
+          <Map aria-hidden="true" />Voltar ao mapa
+        </Button>
+        <Button size="gordinho" variant="outline" className="sm:flex-1" nativeButton={false} render={<Link href="/" />}>
+          <Home aria-hidden="true" />Início
         </Button>
         <Button size="gordinho" variant="outline" className="sm:flex-1" onClick={() => window.print()}>
           <Printer aria-hidden="true" />Imprimir
