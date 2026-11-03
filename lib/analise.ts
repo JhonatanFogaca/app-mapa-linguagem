@@ -113,9 +113,12 @@ export type CodigoFalha = "desligada" | "limite" | "tempo" | "falha"
 
 export class FalhaAnalise extends Error {
   codigo: CodigoFalha
-  constructor(codigo: CodigoFalha) {
+  /* Código técnico devolvido pelo servidor (ex.: "http-404-NOT_FOUND"), só para diagnóstico. */
+  detalhe?: string
+  constructor(codigo: CodigoFalha, detalhe?: string) {
     super(codigo)
     this.codigo = codigo
+    this.detalhe = detalhe
   }
 }
 
@@ -137,7 +140,11 @@ export async function solicitarAnalise(idade: number, transcricao: Transcricao):
   }
   if (resposta.status === 503) throw new FalhaAnalise("desligada")
   if (resposta.status === 429) throw new FalhaAnalise("limite")
-  if (!resposta.ok) throw new FalhaAnalise("falha")
+  if (!resposta.ok) {
+    const erro = (await resposta.json().catch(() => null)) as { codigo?: unknown } | null
+    const detalhe = typeof erro?.codigo === "string" && /^[A-Za-z0-9_-]{1,60}$/.test(erro.codigo) ? erro.codigo : `http-${resposta.status}`
+    throw new FalhaAnalise("falha", detalhe)
+  }
 
   const corpo = await resposta.json().catch(() => null)
   const saida = normalizarSaida(corpo)

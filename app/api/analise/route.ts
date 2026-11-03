@@ -183,14 +183,16 @@ async function consultar(provedor: Provedor, entrada: EntradaAnalise): Promise<u
       signal: sinal,
       cache: "no-store",
     })
-    if (!servico.ok) throw new ErroServico(servico.status)
-    const dados: { candidates?: { content?: { parts?: { text?: string }[] } }[] } = await servico.json()
-    const texto = dados.candidates?.[0]?.content?.parts?.map((p) => p.text ?? "").join("")
-    if (!texto) return null
+    if (!servico.ok) throw await erroDoServico(servico)
+    const dados: { candidates?: { finishReason?: string; content?: { parts?: { text?: string }[] } }[] } = await servico.json()
+    const candidato = dados.candidates?.[0]
+    const motivo = typeof candidato?.finishReason === "string" && /^[A-Z_]{1,30}$/.test(candidato.finishReason) ? candidato.finishReason : "SEM_CANDIDATO"
+    const texto = candidato?.content?.parts?.map((p) => p.text ?? "").join("")
+    if (!texto) throw new ErroFormato(motivo)
     try {
       return JSON.parse(texto)
     } catch {
-      return null
+      throw new ErroFormato(motivo)
     }
   }
 
@@ -213,15 +215,39 @@ async function consultar(provedor: Provedor, entrada: EntradaAnalise): Promise<u
     signal: sinal,
     cache: "no-store",
   })
-  if (!servico.ok) throw new ErroServico(servico.status)
+  if (!servico.ok) throw await erroDoServico(servico)
   const dados: { content?: { type?: string; input?: unknown }[] } = await servico.json()
-  return dados.content?.find((b) => b.type === "tool_use")?.input ?? null
+  const ferramenta = dados.content?.find((b) => b.type === "tool_use")?.input
+  if (!ferramenta) throw new ErroFormato("SEM_FERRAMENTA")
+  return ferramenta
 }
 
 class ErroServico extends Error {
-  constructor(public status: number) {
+  constructor(
+    public status: number,
+    public detalhe = "",
+  ) {
     super("servico")
   }
+}
+
+class ErroFormato extends Error {
+  constructor(public detalhe = "") {
+    super("formato")
+  }
+}
+
+/* Só o código do erro do serviço (ex.: NOT_FOUND, invalid_request_error), nunca texto livre nem conteúdo. */
+async function erroDoServico(servico: Response) {
+  let detalhe = ""
+  try {
+    const d = (await servico.json()) as { error?: { status?: unknown; type?: unknown } }
+    const bruto = d.error?.status ?? d.error?.type
+    if (typeof bruto === "string" && /^[A-Za-z_]{1,40}$/.test(bruto)) detalhe = bruto
+  } catch {
+    /* corpo vazio ou não é JSON */
+  }
+  return new ErroServico(servico.status, detalhe)
 }
 
 export async function POST(req: Request) {
@@ -247,8 +273,14 @@ export async function POST(req: Request) {
   } catch (erro) {
     if (erro instanceof ErroServico) {
       /* Só o código de status vai para o log, nunca o conteúdo. */
-      console.error("analise: servico respondeu", erro.status)
-      return resposta({ erro: "falha" }, 502)
+      const codigo = `http-${erro.status}${erro.detalhe ? `-${erro.detalhe}` : ""}`
+      console.error("analise: servico respondeu", codigo)
+      return resposta({ erro: "falha", codigo }, 502)
+    }
+    if (erro instanceof ErroFormato) {
+      const codigo = `formato${erro.detalhe ? `-${erro.detalhe}` : ""}`
+      console.error("analise: resposta fora do formato", codigo)
+      return resposta({ erro: "falha", codigo }, 502)
     }
     const tempo = erro instanceof Error && (erro.name === "TimeoutError" || erro.name === "AbortError")
     console.error("analise: falha ao chamar o servico", tempo ? "tempo esgotado" : "rede")
@@ -258,7 +290,7 @@ export async function POST(req: Request) {
   const saida = normalizarSaida(bruto2)
   if (!saida) {
     console.error("analise: resposta fora do formato esperado")
-    return resposta({ erro: "falha" }, 502)
+    return resposta({ erro: "falha", codigo: "formato-campos" }, 502)
   }
   return resposta({ ...saida, provedor: NOME_PROVEDOR[provedorEscolhido()] })
 }

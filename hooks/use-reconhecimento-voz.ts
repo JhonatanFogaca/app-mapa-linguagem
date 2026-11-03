@@ -32,7 +32,14 @@ function obterConstrutor(): ConstrutorReconhecedor | null {
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null
 }
 
-export type ErroVoz = "sem-fala" | "sem-permissao" | "indisponivel"
+export type ErroVoz = "sem-fala" | "sem-permissao" | "rede" | "indisponivel"
+
+/* iPhone e iPad (inclusive o Chrome deles, que usa o motor do Safari): o reconhecimento de voz falha com "aborted"
+ * depois da primeira fala. Por isso a voz real fica desligada neles. */
+function ehIOS() {
+  if (typeof navigator === "undefined") return false
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+}
 
 type Opcoes = {
   /** Chamado uma vez, com o texto final reconhecido. */
@@ -47,14 +54,11 @@ type Opcoes = {
  * Reconhecimento de fala do navegador (pt-BR), uma frase por vez.
  * O texto fica só em memória: nada é gravado por este código.
  * Atenção: no Chrome, o navegador envia o áudio a um serviço externo para transcrever.
- *
- * A mesma instância é reaproveitada entre as falas. No Safari do iPhone, criar uma instância nova
- * a cada toque costuma falhar a partir da segunda vez.
  */
 export function useReconhecimentoVoz({ onTexto, onErro, limiteMs = 12000 }: Opcoes) {
   const [suportado, setSuportado] = useState(false)
-  const instancia = useRef<Reconhecedor | null>(null)
-  const ativa = useRef(false)
+  const [motivo, setMotivo] = useState<"ios" | "sem-suporte" | null>(null)
+  const reconhecedor = useRef<Reconhecedor | null>(null)
   const limite = useRef<ReturnType<typeof setTimeout> | null>(null)
   const entregue = useRef(false)
   const textoFinal = useRef("")
@@ -66,7 +70,10 @@ export function useReconhecimentoVoz({ onTexto, onErro, limiteMs = 12000 }: Opco
   })
 
   useEffect(() => {
-    setSuportado(obterConstrutor() !== null)
+    const temConstrutor = obterConstrutor() !== null
+    const ios = ehIOS()
+    setSuportado(temConstrutor && !ios)
+    setMotivo(ios ? "ios" : temConstrutor ? null : "sem-suporte")
   }, [])
 
   const limpar = useCallback(() => {
@@ -74,13 +81,10 @@ export function useReconhecimentoVoz({ onTexto, onErro, limiteMs = 12000 }: Opco
     limite.current = null
   }, [])
 
-  /* Cancela a escuta em andamento sem entregar nada (ex.: ao sair da tela). */
   const parar = useCallback(() => {
     limpar()
-    entregue.current = true
-    const atual = instancia.current
-    instancia.current = null
-    ativa.current = false
+    const atual = reconhecedor.current
+    reconhecedor.current = null
     if (atual) {
       atual.onresult = null
       atual.onerror = null
@@ -93,7 +97,17 @@ export function useReconhecimentoVoz({ onTexto, onErro, limiteMs = 12000 }: Opco
     }
   }, [limpar])
 
-  const criar = useCallback((Construtor: ConstrutorReconhecedor) => {
+  const iniciar = useCallback(() => {
+    const Construtor = obterConstrutor()
+    if (!Construtor) {
+      callbacks.current.onErro("indisponivel", "sem-suporte")
+      return
+    }
+    parar()
+    entregue.current = false
+    textoFinal.current = ""
+    erroAtual.current = null
+
     const r = new Construtor()
     r.lang = "pt-BR"
     r.continuous = false
@@ -112,61 +126,32 @@ export function useReconhecimentoVoz({ onTexto, onErro, limiteMs = 12000 }: Opco
     r.onerror = (e) => {
       const detalhe = e.error
       if (detalhe === "no-speech" || detalhe === "aborted") erroAtual.current = { tipo: "sem-fala", detalhe }
-      else if (detalhe === "not-allowed" || detalhe === "service-not-allowed")
-        erroAtual.current = { tipo: "sem-permissao", detalhe }
+      else if (detalhe === "not-allowed" || detalhe === "service-not-allowed") erroAtual.current = { tipo: "sem-permissao", detalhe }
+      else if (detalhe === "network") erroAtual.current = { tipo: "rede", detalhe }
       else erroAtual.current = { tipo: "indisponivel", detalhe }
     }
 
     r.onend = () => {
       limpar()
-      ativa.current = false
+      reconhecedor.current = null
       if (entregue.current) return
       entregue.current = true
       if (textoFinal.current) callbacks.current.onTexto(textoFinal.current)
       else callbacks.current.onErro(erroAtual.current?.tipo ?? "sem-fala", erroAtual.current?.detalhe)
     }
-    return r
-  }, [limpar])
 
-  const iniciar = useCallback(() => {
-    const Construtor = obterConstrutor()
-    if (!Construtor) {
-      callbacks.current.onErro("indisponivel", "sem-suporte")
+    reconhecedor.current = r
+    try {
+      r.start()
+    } catch (erro) {
+      reconhecedor.current = null
+      callbacks.current.onErro("indisponivel", erro instanceof Error ? erro.name : "start")
       return
     }
-    if (ativa.current) return
-    entregue.current = false
-    textoFinal.current = ""
-    erroAtual.current = null
-    if (!instancia.current) instancia.current = criar(Construtor)
-    const r = instancia.current
-
-    const comecar = (tentativa: number) => {
-      try {
-        r.start()
-        ativa.current = true
-        limite.current = setTimeout(() => {
-          try {
-            r.stop()
-          } catch {
-            // já tinha terminado
-          }
-        }, limiteMs)
-      } catch (erro) {
-        /* "InvalidStateError": o navegador ainda está encerrando a escuta anterior. Tenta de novo uma vez. */
-        if (tentativa === 0 && erro instanceof Error && erro.name === "InvalidStateError") {
-          setTimeout(() => comecar(1), 300)
-          return
-        }
-        ativa.current = false
-        entregue.current = true
-        callbacks.current.onErro("indisponivel", erro instanceof Error ? erro.name : "start")
-      }
-    }
-    comecar(0)
-  }, [criar, limiteMs])
+    limite.current = setTimeout(() => reconhecedor.current?.stop(), limiteMs)
+  }, [limiteMs, limpar, parar])
 
   useEffect(() => parar, [parar])
 
-  return { suportado, iniciar, parar }
+  return { suportado, motivo, iniciar, parar }
 }

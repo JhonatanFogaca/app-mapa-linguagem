@@ -24,6 +24,7 @@ type Fase = "tata" | "aguardando" | "gravando" | "fim"
 const MENSAGENS_VOZ: Record<ErroVoz, string> = {
   "sem-fala": "Não consegui te ouvir. Vamos tentar de novo?",
   "sem-permissao": "Preciso do microfone. Peça a um adulto para liberar nas permissões do navegador.",
+  rede: "O navegador não conseguiu falar com o serviço de voz. Confira a internet (ou VPN e firewall) e tente de novo, ou use o modo simulado.",
   indisponivel: "A voz não funcionou agora. Tente de novo ou use o modo simulado.",
 }
 
@@ -231,6 +232,7 @@ export function SessaoConversa({ roteiro }: { roteiro: Roteiro }) {
               modo={modo}
               onMudar={mudarModo}
               vozDisponivel={voz.suportado}
+              motivoIndisponivel={voz.motivo}
               desabilitado={fase === "gravando"}
               cores={cores}
             />
