@@ -2,7 +2,7 @@ import type { Dominio } from "@/lib/resultado"
 import { situacao } from "@/lib/resultado"
 import { INFO_PERSONAGEM } from "@/lib/personagens"
 
-const ROTULO = { dentro: "Dentro do esperado", atencao: "Merece atenção", acima: "Acima do esperado" }
+const ROTULO = { dentro: "Dentro do esperado", atencao: "Sinal de atenção", acima: "Acima do esperado" }
 
 export function BarraDominio({ d, texto }: { d: Dominio; texto: string }) {
   const info = INFO_PERSONAGEM[d.personagem]

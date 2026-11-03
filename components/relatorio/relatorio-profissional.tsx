@@ -3,10 +3,12 @@
 import Link from "next/link"
 import { Download, Home, Printer } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useAnalise } from "@/lib/analise"
 import { useCrianca, useDataHoje } from "@/lib/crianca"
 import { AVISO_TRIAGEM, DOMINIOS, situacao } from "@/lib/resultado"
 import { ROTEIROS } from "@/lib/roteiro-sessao"
 import { missoesJogadas, useTranscricao } from "@/lib/transcricao"
+import { CartaoAnaliseIA, DominiosIA } from "./analise-ia"
 import { BarraDominio } from "./barra-dominio"
 import { GraficoRadar } from "./grafico-radar"
 import { TranscricaoSessao } from "./transcricao-sessao"
@@ -15,6 +17,7 @@ export function RelatorioProfissional() {
   const { apelido, idade } = useCrianca()
   const data = useDataHoje()
   const transcricao = useTranscricao()
+  const analise = useAnalise()
   const jogadas = missoesJogadas(transcricao)
   const atencao = DOMINIOS.filter((d) => situacao(d) === "atencao")
   return (
@@ -29,34 +32,54 @@ export function RelatorioProfissional() {
             : "Sessão de exemplo (nenhuma missão jogada)"}
           {data && ` · ${data}`}
         </p>
-        <p role="note" className="mt-1 rounded-2xl bg-amarelo/15 px-3 py-2 text-sm font-semibold">
-          Pontuações e textos dos domínios são fictícios, de demonstração: ainda não são calculados a partir da fala da criança.
-        </p>
+        {!analise && (
+          <p role="note" className="mt-1 rounded-2xl bg-amarelo/15 px-3 py-2 text-sm font-semibold">
+            Pontuações e textos dos domínios são fictícios, de demonstração: ainda não são calculados a partir da fala da criança.
+          </p>
+        )}
       </header>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <section aria-labelledby="t-perfil" className="rounded-3xl border-2 border-border bg-card p-4 sombra-suave print:break-inside-avoid md:p-5">
-          <h2 id="t-perfil" className="font-heading text-xl font-bold">Perfil por domínio</h2>
-          <GraficoRadar />
-        </section>
-        <section aria-labelledby="t-sintese" className="flex flex-col gap-3 rounded-3xl border-2 border-border bg-card p-4 sombra-suave md:p-5">
-          <h2 id="t-sintese" className="font-heading text-xl font-bold">Síntese</h2>
-          <p>
-            {DOMINIOS.length - atencao.length} de {DOMINIOS.length} domínios dentro da faixa esperada para a idade.
-            {atencao.length > 0 && ` Pontos de atenção: ${atencao.map((d) => d.nome.toLowerCase()).join(", ")}.`}
-          </p>
-          <p className="text-sm text-muted-foreground">Sugestão: reavaliar vocabulário com tarefa de nomeação e categorização.</p>
-        </section>
-      </div>
+      <CartaoAnaliseIA />
 
-      <section aria-labelledby="t-dominios" className="flex flex-col gap-3">
-        <h2 id="t-dominios" className="font-heading text-2xl font-bold">Análise por domínio</h2>
-        <div className="grid gap-3 md:grid-cols-2">
-          {DOMINIOS.map((d) => (
-            <BarraDominio key={d.id} d={d} texto={d.tecnico} />
-          ))}
-        </div>
-      </section>
+      {analise ? (
+        <>
+          <section aria-labelledby="t-sintese" className="flex flex-col gap-3 rounded-3xl border-2 border-border bg-card p-4 sombra-suave print:break-inside-avoid md:p-5">
+            <h2 id="t-sintese" className="font-heading text-xl font-bold">Síntese (gerada por IA, a validar)</h2>
+            <p>{analise.sintese}</p>
+          </section>
+
+          <section aria-labelledby="t-dominios" className="flex flex-col gap-3">
+            <h2 id="t-dominios" className="font-heading text-2xl font-bold">Análise por domínio (gerada por IA, a validar)</h2>
+            <DominiosIA analise={analise} variante="profissional" />
+          </section>
+        </>
+      ) : (
+        <>
+          <div className="grid gap-6 md:grid-cols-2">
+            <section aria-labelledby="t-perfil" className="rounded-3xl border-2 border-border bg-card p-4 sombra-suave print:break-inside-avoid md:p-5">
+              <h2 id="t-perfil" className="font-heading text-xl font-bold">Perfil por domínio (exemplo)</h2>
+              <GraficoRadar />
+            </section>
+            <section aria-labelledby="t-sintese" className="flex flex-col gap-3 rounded-3xl border-2 border-border bg-card p-4 sombra-suave md:p-5">
+              <h2 id="t-sintese" className="font-heading text-xl font-bold">Síntese (exemplo)</h2>
+              <p>
+                {DOMINIOS.length - atencao.length} de {DOMINIOS.length} domínios dentro da faixa esperada para a idade.
+                {atencao.length > 0 && ` Pontos de atenção: ${atencao.map((d) => d.nome.toLowerCase()).join(", ")}.`}
+              </p>
+              <p className="text-sm text-muted-foreground">Sugestão: reavaliar vocabulário com tarefa de nomeação e categorização.</p>
+            </section>
+          </div>
+
+          <section aria-labelledby="t-dominios" className="flex flex-col gap-3">
+            <h2 id="t-dominios" className="font-heading text-2xl font-bold">Análise por domínio (exemplo)</h2>
+            <div className="grid gap-3 md:grid-cols-2">
+              {DOMINIOS.map((d) => (
+                <BarraDominio key={d.id} d={d} texto={d.tecnico} />
+              ))}
+            </div>
+          </section>
+        </>
+      )}
 
       <TranscricaoSessao apelido={apelido} transcricao={transcricao} />
 

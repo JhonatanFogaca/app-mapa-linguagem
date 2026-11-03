@@ -14,8 +14,8 @@ export const metadata: Metadata = {
 const ETAPAS = [
   { icone: Sparkles, titulo: "A criança brinca", texto: "Em missões com personagens animadas, ela conversa e conta histórias, sem perceber que está sendo avaliada." },
   { icone: Mic, titulo: "A conversa vira texto", texto: "Com a \"Voz real\" ligada, o navegador transforma a fala em texto. No modo simulado, as respostas vêm do roteiro. O app não grava áudio." },
-  { icone: Brain, titulo: "A análise (próximo passo)", texto: "A ideia é comparar sintaxe e gramática, vocabulário, coerência narrativa e processamento com o esperado para a idade, com critérios das fonoaudiólogas. Nesta demonstração, as pontuações são fictícias." },
-  { icone: ShieldCheck, titulo: "Dois relatórios", texto: "Um técnico para a fonoaudióloga, com a transcrição da conversa, e outro simples, com dicas, para a família. Os resultados dos domínios ainda são de exemplo." },
+  { icone: Brain, titulo: "A IA analisa (opcional)", texto: "Se o adulto pedir, o texto das respostas e a idade vão ao serviço de IA da Anthropic, que sugere uma categoria para cada domínio: dentro do esperado, sinal de atenção ou acima do esperado. É uma proposta, a validar pelas fonoaudiólogas, com critérios ainda em definição. Sem a análise, os resultados dos relatórios são de exemplo." },
+  { icone: ShieldCheck, titulo: "Dois relatórios", texto: "Um técnico para a fonoaudióloga, com a transcrição da conversa, e outro simples, com dicas, para a família. Sem a análise por IA, os resultados dos domínios são de exemplo." },
 ]
 
 export default function PaginaSobre() {
@@ -29,7 +29,7 @@ export default function PaginaSobre() {
         <h1 className="text-balance font-heading text-3xl font-bold md:text-4xl">Sobre o projeto</h1>
         <p className="text-lg text-muted-foreground">
           O Mapa da Linguagem é um projeto acadêmico de triagem divertida da fala e da linguagem infantil.
-          Esta versão é um protótipo de demonstração: as respostas e os resultados são simulados.
+          Esta versão é um protótipo de demonstração: o modo simulado e os resultados de exemplo vêm identificados na tela.
         </p>
       </header>
 
@@ -75,6 +75,11 @@ export default function PaginaSobre() {
           <li>
             Com a &quot;Voz real&quot; ligada, o navegador transforma a fala em texto. No Chrome, o áudio vai ao Google
             apenas para essa transcrição. No modo simulado, nada é captado.
+          </li>
+          <li>
+            A análise por IA é opcional e só acontece quando o adulto toca no botão do relatório. Aí, o texto das
+            respostas e a idade (sem apelido e sem áudio) são enviados ao serviço de IA da Anthropic. Na demonstração,
+            use apenas falas de adultos, sem informações pessoais.
           </li>
         </ul>
       </section>

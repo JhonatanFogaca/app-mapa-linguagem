@@ -4,12 +4,15 @@ import Link from "next/link"
 import { Heart, Home, Lightbulb, Printer } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Personagem } from "@/components/personagem"
+import { useAnalise } from "@/lib/analise"
 import { useCrianca } from "@/lib/crianca"
 import { AVISO_TRIAGEM, DOMINIOS } from "@/lib/resultado"
+import { CartaoAnaliseIA, DominiosIA } from "./analise-ia"
 import { BarraDominio } from "./barra-dominio"
 
 export function RelatorioPais() {
   const { apelido, idade } = useCrianca()
+  const analise = useAnalise()
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-6 md:py-10">
       <section className="flex flex-col items-center gap-3 rounded-3xl bg-ceu p-6 text-center">
@@ -20,27 +23,36 @@ export function RelatorioPais() {
         </p>
       </section>
 
-      <p role="note" className="rounded-2xl bg-amarelo/15 px-4 py-3 text-sm font-semibold">
-        Resultados de exemplo, só para a demonstração: ainda não são calculados a partir da fala da criança.
-      </p>
+      {!analise && (
+        <p role="note" className="rounded-2xl bg-amarelo/15 px-4 py-3 text-sm font-semibold">
+          Resultados de exemplo, só para a demonstração: ainda não são calculados a partir da fala da criança.
+        </p>
+      )}
+
+      <CartaoAnaliseIA />
 
       <section aria-labelledby="t-resumo" className="flex flex-col gap-3">
         <h2 id="t-resumo" className="flex items-center gap-2 font-heading text-2xl font-bold">
-          <Heart className="size-6 text-rosa" aria-hidden="true" />O que vimos de bom
+          <Heart className="size-6 text-rosa" aria-hidden="true" />
+          {analise ? "Como foi a conversa" : "O que vimos de bom (exemplo)"}
         </h2>
-        <div className="flex flex-col gap-3">
-          {DOMINIOS.map((d) => (
-            <BarraDominio key={d.id} d={d} texto={d.simples} />
-          ))}
-        </div>
+        {analise ? (
+          <DominiosIA analise={analise} variante="pais" />
+        ) : (
+          <div className="flex flex-col gap-3">
+            {DOMINIOS.map((d) => (
+              <BarraDominio key={d.id} d={d} texto={d.simples} />
+            ))}
+          </div>
+        )}
       </section>
 
-      <section aria-labelledby="t-dicas" className="flex flex-col gap-3 rounded-3xl border-2 border-amarelo bg-amarelo/15 p-5">
+      <section aria-labelledby="t-dicas" className="flex flex-col gap-3 rounded-3xl border-2 border-amarelo bg-amarelo/15 p-5 print:break-inside-avoid">
         <h2 id="t-dicas" className="flex items-center gap-2 font-heading text-2xl font-bold">
           <Lightbulb className="size-6" aria-hidden="true" />Dicas para brincar em casa
         </h2>
         <ul className="flex list-disc flex-col gap-2 pl-5">
-          {DOMINIOS.map((d) => (
+          {(analise ? analise.dominios : DOMINIOS).map((d) => (
             <li key={d.id}>{d.dica}</li>
           ))}
         </ul>
