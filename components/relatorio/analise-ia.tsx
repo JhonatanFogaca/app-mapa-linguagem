@@ -42,15 +42,18 @@ export function CartaoAnaliseIA() {
   const { estado: disponivel, provedor } = useAnaliseDisponivel()
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState<CodigoFalha | null>(null)
+  const [detalheErro, setDetalheErro] = useState("")
   const jogou = missoesJogadas(transcricao).length > 0
 
   async function analisar() {
     setCarregando(true)
     setErro(null)
+    setDetalheErro("")
     try {
       await solicitarAnalise(idade, transcricao)
     } catch (e) {
       setErro(e instanceof FalhaAnalise ? e.codigo : "falha")
+      setDetalheErro(e instanceof FalhaAnalise && e.detalhe ? ` (código: ${e.detalhe})` : "")
     } finally {
       setCarregando(false)
     }
@@ -77,7 +80,7 @@ export function CartaoAnaliseIA() {
         </p>
         {erro && (
           <p role="alert" className="text-sm font-semibold">
-            {MENSAGEM_ERRO[erro]} Mantive a análise anterior.
+            {MENSAGEM_ERRO[erro]}{detalheErro} Mantive a análise anterior.
           </p>
         )}
         <div className="print:hidden">
@@ -111,7 +114,7 @@ export function CartaoAnaliseIA() {
           </p>
           {erro && (
             <p role="alert" className="text-sm font-semibold">
-              {MENSAGEM_ERRO[erro]} O relatório continua com os dados de exemplo.
+              {MENSAGEM_ERRO[erro]}{detalheErro} O relatório continua com os dados de exemplo.
             </p>
           )}
           <div className="print:hidden">

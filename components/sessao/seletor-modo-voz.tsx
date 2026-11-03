@@ -9,6 +9,7 @@ type Props = {
   modo: ModoVoz
   onMudar: (modo: ModoVoz) => void
   vozDisponivel: boolean
+  motivoIndisponivel?: "ios" | "sem-suporte" | null
   desabilitado: boolean
   cores: CoresSessao
 }
@@ -18,7 +19,7 @@ const OPCOES: { valor: ModoVoz; rotulo: string }[] = [
   { valor: "real", rotulo: "Voz real" },
 ]
 
-export function SeletorModoVoz({ modo, onMudar, vozDisponivel, desabilitado, cores }: Props) {
+export function SeletorModoVoz({ modo, onMudar, vozDisponivel, motivoIndisponivel, desabilitado, cores }: Props) {
   return (
     <div className="flex flex-col items-center gap-2 text-center">
       <div role="group" aria-label="Modo da conversa" className="flex rounded-full border-2 border-border bg-card p-1">
@@ -56,7 +57,9 @@ export function SeletorModoVoz({ modo, onMudar, vozDisponivel, desabilitado, cor
       )}
       {!vozDisponivel && (
         <p className="max-w-md text-pretty text-sm text-muted-foreground">
-          Este navegador não tem reconhecimento de voz. Para testar a voz real, use o Chrome.
+          {motivoIndisponivel === "ios"
+            ? "No iPhone e no iPad a voz real ainda não é confiável. Para testar a voz real, use o Chrome no computador; aqui, use o modo simulado."
+            : "Este navegador não tem reconhecimento de voz. Para testar a voz real, use o Chrome."}
         </p>
       )}
     </div>
