@@ -1,6 +1,7 @@
 "use client"
 
 import { useSyncExternalStore } from "react"
+import { reiniciarAnalise } from "@/lib/analise"
 import { ROTEIROS, type PersonagemJogavel } from "@/lib/roteiro-sessao"
 
 /*
@@ -62,6 +63,8 @@ export function gravarResposta(missao: PersonagemJogavel, indice: number, texto:
   } catch {
     /* sem armazenamento disponível: o relatório mostra a conversa de exemplo */
   }
+  /* A conversa mudou: a análise por IA anterior ficou desatualizada. */
+  reiniciarAnalise()
 }
 
 export function reiniciarTranscricao() {
@@ -70,6 +73,7 @@ export function reiniciarTranscricao() {
   } catch {
     /* sem armazenamento disponível */
   }
+  reiniciarAnalise()
 }
 
 /* Missões com ao menos uma resposta guardada, na ordem do mapa. */

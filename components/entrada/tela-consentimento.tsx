@@ -1,4 +1,4 @@
-import { Mic, ShieldCheck, Stethoscope } from "lucide-react"
+import { Mic, ShieldCheck, Sparkles, Stethoscope } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MolduraTela } from "./moldura-tela"
 
@@ -26,12 +26,18 @@ const ITENS = [
     titulo: "Os dados são protegidos",
     texto: "A voz de crianças é um dado sensível. Pedimos só apelido e idade, e o tratamento segue a LGPD (Lei Geral de Proteção de Dados).",
   },
+  {
+    icone: Sparkles,
+    titulo: "A análise por IA é opcional",
+    texto:
+      "Se o adulto tocar em \"Analisar a conversa com IA\" no relatório, o texto das respostas e a idade da criança (sem apelido e sem áudio) são enviados ao serviço de IA da Anthropic, só para gerar a análise. Se não tocar, nada é enviado. Na demonstração, use apenas falas de adultos, sem informações pessoais.",
+  },
 ]
 
 // TEXTO A VALIDAR: a redação do consentimento é uma proposta e precisa de revisão
 // das fonoaudiólogas e de quem responde pela LGPD antes de uso com crianças reais.
 
-const CORES_ICONE = ["bg-azul", "bg-roxo", "bg-rosa"]
+const CORES_ICONE = ["bg-azul", "bg-roxo", "bg-rosa", "bg-verde"]
 
 export function TelaConsentimento({ consentiu, onConsentimentoChange, onVoltar, onContinuar }: Props) {
   return (
