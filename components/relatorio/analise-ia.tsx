@@ -39,7 +39,7 @@ export function CartaoAnaliseIA() {
   const { idade } = useCrianca()
   const transcricao = useTranscricao()
   const analise = useAnalise()
-  const disponivel = useAnaliseDisponivel()
+  const { estado: disponivel, provedor } = useAnaliseDisponivel()
   const [carregando, setCarregando] = useState(false)
   const [erro, setErro] = useState<CodigoFalha | null>(null)
   const jogou = missoesJogadas(transcricao).length > 0
@@ -69,7 +69,7 @@ export function CartaoAnaliseIA() {
       <section aria-labelledby="t-ia" className={caixa}>
         {titulo}
         <p className="text-sm font-semibold">
-          Gerada por IA (Anthropic) a partir do texto da conversa. É uma proposta, a validar pelas fonoaudiólogas, e não um diagnóstico.
+          Gerada por IA{analise.provedor ? ` (${analise.provedor})` : ""} a partir do texto da conversa. É uma proposta, a validar pelas fonoaudiólogas, e não um diagnóstico.
         </p>
         <p className="text-sm text-muted-foreground">
           Missões analisadas: {analise.missoes.join(", ")} · {ORIGEM[analise.origem]}. Não são analisados: fonologia
@@ -107,7 +107,7 @@ export function CartaoAnaliseIA() {
         <>
           <p className="text-sm">
             Ao tocar no botão, o texto das respostas e a idade da criança (sem apelido e sem áudio) são enviados ao
-            serviço de IA da Anthropic para gerar a análise. Use apenas falas sem informações pessoais.
+            serviço de IA {provedor ? `(${provedor})` : ""} para gerar a análise. Use apenas falas sem informações pessoais.
           </p>
           {erro && (
             <p role="alert" className="text-sm font-semibold">
