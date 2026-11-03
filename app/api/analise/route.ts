@@ -22,7 +22,7 @@ export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
 const MODELO_ANTHROPIC = "claude-sonnet-5-5"
-const MODELO_GEMINI = "gemini-2.5-flash"
+const MODELO_GEMINI = "gemini-3.5-flash-lite"
 const TEMPO_LIMITE_MS = 30_000
 const TAMANHO_MAXIMO = 20_000
 
@@ -176,7 +176,7 @@ async function consultar(provedor: Provedor, entrada: EntradaAnalise): Promise<u
         generationConfig: {
           responseMimeType: "application/json",
           responseSchema: ESQUEMA_GEMINI,
-          maxOutputTokens: 4000,
+          maxOutputTokens: 8000,
           temperature: 0.3,
         },
       }),
