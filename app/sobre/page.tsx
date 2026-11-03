@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const ETAPAS = [
   { icone: Sparkles, titulo: "A criança brinca", texto: "Em missões com personagens animadas, ela conversa e conta histórias, sem perceber que está sendo avaliada." },
   { icone: Mic, titulo: "A conversa vira texto", texto: "Com a \"Voz real\" ligada, o navegador transforma a fala em texto. No modo simulado, as respostas vêm do roteiro. O app não grava áudio." },
-  { icone: Brain, titulo: "A IA analisa (opcional)", texto: "Se o adulto pedir, o texto das respostas e a idade vão ao serviço de IA da Anthropic, que sugere uma categoria para cada domínio: dentro do esperado, sinal de atenção ou acima do esperado. É uma proposta, a validar pelas fonoaudiólogas, com critérios ainda em definição. Sem a análise, os resultados dos relatórios são de exemplo." },
+  { icone: Brain, titulo: "A IA analisa (opcional)", texto: "Se o adulto pedir, o texto das respostas e a idade vão a um serviço de IA externo (Anthropic ou Google Gemini, conforme a configuração; o relatório informa qual), que sugere uma categoria para cada domínio: dentro do esperado, sinal de atenção ou acima do esperado. É uma proposta, a validar pelas fonoaudiólogas, com critérios ainda em definição. Sem a análise, os resultados dos relatórios são de exemplo." },
   { icone: ShieldCheck, titulo: "Dois relatórios", texto: "Um técnico para a fonoaudióloga, com a transcrição da conversa, e outro simples, com dicas, para a família. Sem a análise por IA, os resultados dos domínios são de exemplo." },
 ]
 
@@ -78,7 +78,7 @@ export default function PaginaSobre() {
           </li>
           <li>
             A análise por IA é opcional e só acontece quando o adulto toca no botão do relatório. Aí, o texto das
-            respostas e a idade (sem apelido e sem áudio) são enviados ao serviço de IA da Anthropic. Na demonstração,
+            respostas e a idade (sem apelido e sem áudio) são enviados a um serviço de IA externo (Anthropic ou Google Gemini, conforme a configuração). Na demonstração,
             use apenas falas de adultos, sem informações pessoais.
           </li>
         </ul>

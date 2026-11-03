@@ -43,7 +43,8 @@ function interpretar(bruto: string): AnaliseIA | null {
     if (!saida || typeof dados.geradaEm !== "string" || typeof dados.idade !== "number") return null
     const origem = dados.origem === "real" || dados.origem === "simulado" || dados.origem === "misto" ? dados.origem : "misto"
     const missoes = Array.isArray(dados.missoes) ? dados.missoes.filter((m): m is string => typeof m === "string") : []
-    return { ...saida, geradaEm: dados.geradaEm, idade: dados.idade, origem, missoes }
+    const provedor = typeof dados.provedor === "string" ? dados.provedor.slice(0, 40) : undefined
+    return { ...saida, geradaEm: dados.geradaEm, idade: dados.idade, origem, missoes, provedor }
   } catch {
     return null
   }
@@ -67,19 +68,24 @@ export function useAnalise(): AnaliseIA | null {
 export type Disponibilidade = "carregando" | "sim" | "nao"
 
 /* Pergunta ao servidor se a análise por IA está ligada (existe a chave). Sem ela, o botão nem aparece. */
-export function useAnaliseDisponivel(): Disponibilidade {
+export function useAnaliseDisponivel(): { estado: Disponibilidade; provedor: string } {
   const [estado, setEstado] = useState<Disponibilidade>("carregando")
+  const [provedor, setProvedor] = useState("")
   useEffect(() => {
     let ativo = true
     fetch("/api/analise", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
-      .then((d: { disponivel?: boolean } | null) => ativo && setEstado(d?.disponivel ? "sim" : "nao"))
+      .then((d: { disponivel?: boolean; provedor?: string } | null) => {
+        if (!ativo) return
+        setProvedor(typeof d?.provedor === "string" ? d.provedor.slice(0, 40) : "")
+        setEstado(d?.disponivel ? "sim" : "nao")
+      })
       .catch(() => ativo && setEstado("nao"))
     return () => {
       ativo = false
     }
   }, [])
-  return estado
+  return { estado, provedor }
 }
 
 /* Monta o que vai ao servidor: só idade e texto das respostas, com a fala da personagem. Sem apelido. */
@@ -133,8 +139,10 @@ export async function solicitarAnalise(idade: number, transcricao: Transcricao):
   if (resposta.status === 429) throw new FalhaAnalise("limite")
   if (!resposta.ok) throw new FalhaAnalise("falha")
 
-  const saida = normalizarSaida(await resposta.json().catch(() => null))
+  const corpo = await resposta.json().catch(() => null)
+  const saida = normalizarSaida(corpo)
   if (!saida) throw new FalhaAnalise("falha")
+  const provedor = typeof corpo?.provedor === "string" ? corpo.provedor.slice(0, 40) : undefined
 
   const analise: AnaliseIA = {
     ...saida,
@@ -142,6 +150,7 @@ export async function solicitarAnalise(idade: number, transcricao: Transcricao):
     idade,
     origem: montada.origem,
     missoes: montada.missoes,
+    provedor,
   }
   try {
     sessionStorage.setItem(CHAVE, JSON.stringify(analise))

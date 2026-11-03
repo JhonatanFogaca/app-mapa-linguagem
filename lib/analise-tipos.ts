@@ -53,6 +53,8 @@ export type AnaliseIA = SaidaAnalise & {
   origem: "real" | "simulado" | "misto"
   /* Rótulos das missões analisadas (ex.: "Tata", "Sisi"). */
   missoes: string[]
+  /* Serviço de IA que gerou a análise (ex.: "Anthropic", "Google (Gemini)"). */
+  provedor?: string
 }
 
 function texto(valor: unknown, limite: number): string {

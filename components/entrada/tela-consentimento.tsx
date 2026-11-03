@@ -30,7 +30,7 @@ const ITENS = [
     icone: Sparkles,
     titulo: "A análise por IA é opcional",
     texto:
-      "Se o adulto tocar em \"Analisar a conversa com IA\" no relatório, o texto das respostas e a idade da criança (sem apelido e sem áudio) são enviados ao serviço de IA da Anthropic, só para gerar a análise. Se não tocar, nada é enviado. Na demonstração, use apenas falas de adultos, sem informações pessoais.",
+      "Se o adulto tocar em \"Analisar a conversa com IA\" no relatório, o texto das respostas e a idade da criança (sem apelido e sem áudio) são enviados a um serviço de IA externo (Anthropic ou Google Gemini, conforme a configuração da demonstração; o relatório informa qual), só para gerar a análise. Se não tocar, nada é enviado. Na demonstração, use apenas falas de adultos, sem informações pessoais.",
   },
 ]
 
